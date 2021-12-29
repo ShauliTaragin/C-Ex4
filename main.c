@@ -359,6 +359,7 @@ int main() {
                 int to_add;
                 scanf("%d", &to_add);
                 insert_node_cmd(&head, to_add);
+                c = getchar();
                 break;
             case 'D':
                 getchar();
