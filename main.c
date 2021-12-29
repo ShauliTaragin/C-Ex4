@@ -2,16 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-void insert_node_cmd(pnode *head);
-
-void delete_node_cmd(pnode *head);
-
-void printGraph_cmd(pnode head); //for self debug
-void deleteGraph_cmd(pnode *head);
-
-void shortsPath_cmd(pnode head);
-
-void TSP_cmd(pnode head);
+//void insert_node_cmd(pnode *head);
+//
+//void delete_node_cmd(pnode *head);
+//
+//void printGraph_cmd(pnode head); //for self debug
+//void deleteGraph_cmd(pnode *head);
+//
+//void shortsPath_cmd(pnode head);
+//
+//void TSP_cmd(pnode head);
 
 int vertex = 0;
 
@@ -62,7 +62,7 @@ void removeedge(pedge *edge_to_rm, int dest) {
         *edge_to_rm = (*edge_to_rm)->next;
         free(temp);
     }
-    if(*edge_to_rm) {
+    if (*edge_to_rm) {
         pedge temp = *edge_to_rm;
         while (temp->next) {//why not run on temp itself?
             if (temp->next->endpoint->node_num == dest) {
@@ -83,7 +83,7 @@ void remove_all_edges(pnode target, pnode *head) {
             removeedge(&(temp->next), temp->next->endpoint->node_num);
         }
         removeedge(&temp, temp->endpoint->node_num);
-        target->edges=NULL;
+        target->edges = NULL;
     }
     //until now we removed all edges going out of the node. now we need to remove all edges which goes in to the node,
     // meaning we need to iterate over all the graph and search for mentions of the node
@@ -91,24 +91,32 @@ void remove_all_edges(pnode target, pnode *head) {
     pnode node_iter = *head;
     while (node_iter) {
         pedge temp = node_iter->edges;
-        //not sure about the following if code at all. need to deal with if removing first edge not sure how.
-        if (temp->endpoint->node_num == node_target_id) {
-            pedge temp2 = temp;
-            temp = temp->next;
-            removeedge(&temp2, node_target_id);
-        }
-        //until here not sure
-        while (temp->next) {
-            if (temp->next->endpoint->node_num ==
-                node_target_id) {//this means i found an edge coming in to the node i wish to remove edges for
-                removeedge(&(temp->next), node_target_id);
+        if (temp) {//if this is false this means no edges for the current node therefore we move on to check the next node
+            //not sure about the following if code at all. need to deal with if removing first edge not sure how.
+            if (temp->endpoint->node_num == node_target_id) {
+                pedge temp2 = temp;
+                temp = temp->next;
+                if (!(temp)) { //this is the case for which there is only one edge in the linked list and i wish to remove it.
+                    removeedge(&temp2, node_target_id);
+                    node_iter->edges = NULL;
+                    continue;
+                }
+                node_iter->edges = temp;
+                removeedge(&temp2, node_target_id);
             }
-            temp = temp->next;//move on to the next edge
+            //until here not sure
+            while (temp->next) {
+                if (temp->next->endpoint->node_num ==node_target_id) {//this means i found an edge coming in to the node i wish to remove edges for
+                    removeedge(&(temp->next), node_target_id);
+                }
+                temp = temp->next;//move on to the next edge
+                if(!(temp)){
+                    break;
+                }
+            }
         }
         node_iter = node_iter->next;//move on to the next node
     }
-
-
 }
 
 void removenode(pnode *head, int node_to_remove) {
@@ -117,9 +125,17 @@ void removenode(pnode *head, int node_to_remove) {
     }
     if ((*head)->node_num == node_to_remove) {
         pnode temp = *head;
-        *head = (*head)->next;
+        if (!(temp->next)) { //this is the case for which there is only one node in the linked list and i wish to remove it.
+            remove_all_edges(temp, head);
+            *head = (*head)->next; //im only changing the head here so i can call the remove edge function with the orignal head
+            free(temp);
+            *head = NULL;
+            return;
+        }
         remove_all_edges(temp, head);
+        *head = (*head)->next;//im only changing the head here so i can call the remove edge function with the orignal head
         free(temp);
+        return;
     } else {
         pnode temp = *head;
         while (temp->next) {
@@ -128,7 +144,7 @@ void removenode(pnode *head, int node_to_remove) {
                 remove_all_edges(temp2, head);
                 temp->next = temp->next->next;
                 free(temp2);
-                break;
+                return;
             }
             temp = temp->next;
         }
@@ -136,86 +152,6 @@ void removenode(pnode *head, int node_to_remove) {
 }
 
 //A 4 n 0 2 5 3 3 n 2 0 4 1 1 n 1 3 7 0 2 n 3 T 3 2 1 3 S 2 0
-
-void build_graph_cmd(pnode *head) {
-    scanf("%d", &vertex); // vertex graph.
-    char n;
-    scanf("%s", &n);
-    for (int i = 0; i < vertex; ++i) {
-        int src_id;
-        scanf("%d", &src_id);
-        pnode checker = *head;
-        pnode node_data;
-        if (i == 0) {
-            head = createnode(src_id);
-            node_data = head;
-        }
-        while (checker) {
-            if (checker->node_num == src_id) {
-                break;
-            }
-            checker = checker->next;
-        }
-        if (!checker) {
-            node_data = createnode(src_id);
-            if (!node_data) {
-                exit(0);
-            }
-        }
-        pnode temp = *head;
-        while (temp->next) {
-            temp = temp->next;
-        }
-        temp->next = node_data;
-        int dest;
-        while (scanf("%d", &dest)) {
-            pedge edge_data = NULL;
-            int weight;
-            scanf("%d", &weight);
-            pnode destination = *head;
-            while (destination) { // creating dest node if dosent exist
-                if (destination->node_num == dest) {
-                    break;
-                }
-                destination = destination->next;
-            }
-            if (!destination) {
-                edge_data = createedge(weight, destination);
-                if (!edge_data) {
-                    exit(0);
-                }
-            } else {
-                //need to create the endpoint node and create the edge with it
-                destination = createnode(dest);
-                if (!destination) {
-                    exit(0);
-                } else {
-                    pnode temp = *head;
-                    while (temp->next) {
-                        temp = temp->next;
-                    }
-                    temp->next = destination;
-                }
-                edge_data = createedge(weight, destination);
-                if (!edge_data) {
-                    exit(0);
-                }
-            }
-            //need to add edge to node->edges and need to see where to add it
-            pedge temp = node_data->edges;
-            if (!temp) {
-                node_data->edges = edge_data;
-            }
-            while (temp->next) {
-                temp = temp->next;
-            }
-            temp->next = edge_data;
-        }
-        if (getchar() != 'n') {
-            break;
-        }
-    }
-}
 
 void insert_node_cmd(pnode *head, int id_of_node_to_add) {
     pnode node_data;
@@ -231,8 +167,9 @@ void insert_node_cmd(pnode *head, int id_of_node_to_add) {
                 while (temp->next) {
                     removeedge(&(temp->next), temp->next->endpoint->node_num);
                 }
-                removeedge(&temp, temp->endpoint->node_num);//big problem here for some reason not freeing the edge only freeing inside the function not wokring out of it
-                check->edges= NULL;
+                removeedge(&temp,
+                           temp->endpoint->node_num);//big problem here for some reason not freeing the edge only freeing inside the function not wokring out of it
+                check->edges = NULL;
             }
             flag = 0;
             break;
@@ -298,10 +235,12 @@ void insert_node_cmd(pnode *head, int id_of_node_to_add) {
             temp->next = edge_data;
         }
     }
+    //add ending point here
 }
 
-void printGraph(pnode *head) {
-    pnode temp = *head;
+void printGraph(pnode head) {
+    pnode temp = head;
+    pnode temp2 = head;
     while (temp != NULL) {
         int src = temp->node_num;
         while (temp->edges != NULL) {
@@ -311,7 +250,17 @@ void printGraph(pnode *head) {
         temp = temp->next;
         //printf("\n");
     }
+    printf("Nodes: ");
+    while(temp2!=NULL){
+        printf("%d",temp2->node_num);
+        if(temp2->next!=NULL){
+            printf(", ");
+        }
+        temp2 = temp2->next;
+    }
+    printf("\n");
 }
+
 
 
 int main() {
@@ -399,7 +348,7 @@ int main() {
                             temp->next = edge_data;
                         }
                     }
-                    c= getchar();
+                    c = getchar();
                     if (c != 'n') {
                         break;
                     }
@@ -411,21 +360,29 @@ int main() {
                 scanf("%d", &to_add);
                 insert_node_cmd(&head, to_add);
                 break;
-                /*
             case 'D':
                 getchar();
-
+                int node_to_remove;//check case for removing head . check case for removing node which is the first edge for some node
+                scanf("%d", &node_to_remove);
+                removenode(&head, node_to_remove);
+                c= getchar();
                 break;
-                */
-            case 'T':
-                printf("T");
+
+//            case 'T':
+//                printf("T");
+//                FLAG = 0;
+//                break;
+//            case ' ':
+//                break;
+            default:
+                printGraph(head);
                 FLAG = 0;
                 break;
-            case ' ':
-                break;
-            default:
-                printf("Please Enter a key");
+                c=-1;
         }
+//        if(c=='EOF'){
+//            break;
+//        }
     }
 }
 
