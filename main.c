@@ -2,7 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+void insert_node_cmd(pnode *head);
 
+void delete_node_cmd(pnode *head);
+
+void printGraph_cmd(pnode head); //for self debug
+void deleteGraph_cmd(pnode *head);
+
+void shortsPath_cmd(pnode head);
+
+void TSP_cmd(pnode head);
 
 int vertex = 0;
 
@@ -129,7 +138,6 @@ void removenode(pnode *head, int node_to_remove) {
 //A 4 n 0 2 5 3 3 n 2 0 4 1 1 n 1 3 7 0 2 n 3 T 3 2 1 3 S 2 0
 
 void build_graph_cmd(pnode *head) {
-    head;
     scanf("%d", &vertex); // vertex graph.
     char n;
     scanf("%s", &n);
@@ -209,73 +217,108 @@ void build_graph_cmd(pnode *head) {
     }
 }
 
-
-void insert_node_cmd(pnode *head);
-
-void delete_node_cmd(pnode *head);
-
-void printGraph_cmd(pnode head); //for self debug
-void deleteGraph_cmd(pnode *head);
-
-void shortsPath_cmd(pnode head);
-
-void TSP_cmd(pnode head);
-
-
-
-/*struct Graph *createGraph(const char *ptr) {
-
-    struct Graph *graph = (struct Graph *) malloc(sizeof(struct Graph));
-
-    graph->head = NULL;
-
-    int index = 0;
-    int FLAG = 0;
-    while (ptr[index] != '\n') {
-        if (ptr[index] == 'n') {
-            index++;
-        }
-        int src = (ptr[index++] - '0');
-        while (ptr[index] != 'n') {
-            if (index >= strlen(ptr)) {
-                FLAG = 1;
-                break;
+void insert_node_cmd(pnode *head, int id_of_node_to_add) {
+    pnode node_data;
+    if (!*head) { //need to check here if its *head or head
+        *head = createnode(id_of_node_to_add);
+    }
+    pnode check = *head;
+    int flag = 1;
+    while (check) { // creating dest node if dosent exist
+        if (check->node_num == id_of_node_to_add) {
+            if ((check->edges)) { //only if there is an edge
+                pedge temp = check->edges;
+                while (temp->next) {
+                    removeedge(&(temp->next), temp->next->endpoint->node_num);
+                }
+                removeedge(&temp, temp->endpoint->node_num);//big problem here for some reason not freeing the edge only freeing inside the function not wokring out of it
+                check->edges= NULL;
             }
-            struct Node *newNode = (struct Node *) malloc(sizeof(struct Node));
-            struct Edge temp;
-            temp.src = src;
-            temp.dest = ptr[index++] - '0';
-            newNode->dest = temp.dest;
-            temp.weight = ptr[index++] - '0';
-            newNode->weight = temp.weight;
-*//*            newNode->next = graph->head[src];
-            graph->head[src] = newNode;*//*
-        }
-        if (FLAG) {
+            flag = 0;
             break;
         }
+        check = check->next;
     }
-    return graph;
-}*/
-
-
-/*void printGraph(struct Graph *graph) {
-    for (int i = 0; i < N; i++) {
-        struct Node *ptr = graph->head[i];
-        while (ptr != NULL) {
-            printf("%d -> %d (%d)\t", i, ptr->dest, ptr->weight);
-            ptr = ptr->next;
-            printf("\n");
+    if (flag) {
+        node_data = createnode(id_of_node_to_add);
+        if (!node_data) {
+            exit(0);
+        }
+        pnode temp4 = *head;
+        while (temp4->next) {
+            temp4 = temp4->next;
+        }
+        temp4->next = node_data;
+    } else {
+        node_data = check;
+    }
+    int dest;
+    while (scanf("%d", &dest)) {
+        pedge edge_data = NULL;
+        int weight;
+        scanf("%d", &weight);
+        pnode pnod1 = *head;
+        int flag2 = 0;
+        while (pnod1) { // creating dest node if dosent exist
+            if (pnod1->node_num == dest) {
+                flag2 = 1;
+                break;
+            }
+            pnod1 = pnod1->next;
+        }
+        if (flag2) { // problem here.
+            edge_data = createedge(weight, pnod1);
+            if (!edge_data) {
+                exit(0);
+            }
+        } else {
+            //need to create the endpoint node and create the edge with it
+            pnod1 = createnode(dest);
+            if (!pnod1) {
+                exit(0);
+            } else {
+                pnode temp = *head;
+                while (temp->next) {
+                    temp = temp->next;
+                }
+                temp->next = pnod1;
+            }
+            edge_data = createedge(weight, pnod1);
+            if (!edge_data) {
+                exit(0);
+            }
+        }
+        pedge temp = node_data->edges;
+        if (!temp) {
+            node_data->edges = edge_data;
+        } else {
+            while (temp->next) {
+                temp = temp->next;
+            }
+            temp->next = edge_data;
         }
     }
-}*/
+}
+
+void printGraph(pnode *head) {
+    pnode temp = *head;
+    while (temp != NULL) {
+        int src = temp->node_num;
+        while (temp->edges != NULL) {
+            printf("%d -> %d (%d)\n", src, temp->edges->endpoint->node_num, temp->edges->weight);
+            temp->edges = temp->edges->next;
+        }
+        temp = temp->next;
+        //printf("\n");
+    }
+}
 
 
 int main() {
     int FLAG = 1;
     node *head = NULL;
+    int c = getchar();
     while (FLAG) {
-        int c = getchar();
         switch (c) {
             case 'A':
                 head = NULL;//make sure code dosen't get stuck here
@@ -356,114 +399,29 @@ int main() {
                             temp->next = edge_data;
                         }
                     }
-                    if (getchar() != 'n') {
+                    c= getchar();
+                    if (c != 'n') {
                         break;
                     }
                 }
-/*                vertex = getchar() - '0';
-                char *One = (char *) calloc(20, sizeof(char));
-                int index = 0;
-                for (c = getchar(); c != '\n'; c = getchar()) {
-                    if (index == 19) {
-                        One = (char *) realloc(One, 21 * 10 * sizeof(char));
-                    }
-                    if (c == ' ') { continue; }
-                    else {
-                        One[index++] = c;
-                    }
-                }
-                One[index] = '\0';
-                //printf("%s\n", One);
-                printf("size of Vertex:");
-                printf("%d\n", vertex);*/
-/*                graph = createGraph(One);
-                printGraph(graph);*/
                 break;
-/*            case 'B':
+            case 'B':
                 getchar();
-                char *Two = (char *) calloc(20, sizeof(char));
-                int index2 = 0;
-                for (c = getchar(); c != '\n'; c = getchar()) {
-                    if (index2 == 20) {
-                        Two = (char *) realloc(Two, 21 * 10 * sizeof(char));
-                    }
-                    if (c == ' ') { continue; }
-                    else {
-                        Two[index2++] = c;
-                    }
-                }
-                Two[index2] = '\0';
-                index2 = 1;
-                int src = Two[0] - '0';
-                struct Node *ptr = graph->head[src];
-                if (ptr == NULL) {
-                    vertex = vertex + 1;
-                    while (index2 < strlen(Two) - 1) {
-                        struct Node *newNode = (struct Node *) malloc(sizeof(struct Node));
-                        struct Edge temp;
-                        temp.src = src;
-                        temp.dest = Two[index2++] - '0';
-                        newNode->dest = temp.dest;
-                        temp.weight = Two[index2++] - '0';
-                        newNode->weight = temp.weight;
-                        newNode->next = graph->head[src];
-                        graph->head[src] = newNode;
-                    }
-                    printGraph(graph);
-                } else {
-                    graph->head[src] = NULL;
-                    while (index2 < strlen(Two) - 1) {
-                        struct Node *newNode = (struct Node *) malloc(sizeof(struct Node));
-                        struct Edge temp;
-                        temp.src = src;
-                        temp.dest = Two[index2++] - '0';
-                        newNode->dest = temp.dest;
-                        temp.weight = Two[index2++] - '0';
-                        newNode->weight = temp.weight;
-                        newNode->next = graph->head[src];
-                        graph->head[src] = newNode;
-                    }
-                    printGraph(graph);
-                }
+                int to_add;
+                scanf("%d", &to_add);
+                insert_node_cmd(&head, to_add);
                 break;
-            case 'D': // fix the pointer's
+                /*
+            case 'D':
                 getchar();
-                char *Three = (char *) calloc(20, sizeof(char));
-                int index3 = 0;
-                for (c = getchar(); c != '\n'; c = getchar()) {
-                    if (index3 == 20) {
-                        Three = (char *) realloc(Three, 21 * 10 * sizeof(char));
-                    }
-                    if (c == ' ') { continue; }
-                    else {
-                        Three[index3++] = c;
-                    }
-                }
-                Three[index3] = '\0';
-                graph->head[Three[0] - '0'] = NULL;
-                vertex--;
-                for (int i = 0; i < N; ++i) {
-                    struct Node *curr = graph->head[i];
-                    while (curr != NULL) {
-                        //struct Node *temp = graph->head[i];
-                        struct Node *prev = graph->head[i];
-                        if (curr->dest == Three[0] - '0') {
-                            graph->head[i] = graph->head[i]->next;
-                            //free(temp);
-                        }
 
-                        curr = curr->next;
-                    }
-                }
-                printGraph(graph);
-                break;
-            case 'S':
-                printf("S");
                 break;
                 */
             case 'T':
                 printf("T");
                 FLAG = 0;
+                break;
+            case ' ':
                 break;
             default:
                 printf("Please Enter a key");
