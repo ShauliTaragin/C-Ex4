@@ -16,12 +16,13 @@ typedef struct GRAPH_NODE_ {
     struct GRAPH_NODE_ *next;
 } node, *pnode;
 
-void build_graph_cmd(pnode *head);
-void insert_node_cmd(pnode *head);
-void delete_node_cmd(pnode *head);
-void printGraph_cmd(pnode head); //for self debug
-void deleteGraph_cmd(pnode* head);
-void shortsPath_cmd(pnode head);
-void TSP_cmd(pnode head);
+int* dijkstra(pnode* head , int src , int dest , int bool);
+
+pnode createnode(int id);
+pedge createedge(int weight, pnode end);
+void removeedge(pedge *edge_to_rm, int dest);
+void remove_all_edges(pnode target, pnode *head);
+void removenode(pnode *head, int node_to_remove);
+void insert_node_cmd(pnode *head, int id_of_node_to_add);
 
 #endif

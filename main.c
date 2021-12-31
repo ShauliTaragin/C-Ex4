@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "Graph.h"
+
 
 //void insert_node_cmd(pnode *head);
 //
@@ -16,19 +18,19 @@
 int vertex = 0;
 
 typedef struct GRAPH_NODE_ *pnode;
-
-typedef struct edge_ {
-    int weight;
-    pnode endpoint;
-    struct edge_ *next;
-} edge, *pedge;
-
-
-typedef struct GRAPH_NODE_ {
-    int node_num;
-    pedge edges;
-    struct GRAPH_NODE_ *next;
-} node, *pnode;
+//
+//typedef struct edge_ {
+//    int weight;
+//    pnode endpoint;
+//    struct edge_ *next;
+//} edge, *pedge;
+//
+//
+//typedef struct GRAPH_NODE_ {
+//    int node_num;
+//    pedge edges;
+//    struct GRAPH_NODE_ *next;
+//} node, *pnode;
 
 pnode createnode(int id) {
     pnode a = (pnode) malloc(sizeof(node));
@@ -238,28 +240,28 @@ void insert_node_cmd(pnode *head, int id_of_node_to_add) {
     //add ending point here
 }
 
-void printGraph(pnode head) {
-    pnode temp = head;
-    pnode temp2 = head;
-    while (temp != NULL) {
-        int src = temp->node_num;
-        while (temp->edges != NULL) {
-            printf("%d -> %d (%d)\n", src, temp->edges->endpoint->node_num, temp->edges->weight);
-            temp->edges = temp->edges->next;
-        }
-        temp = temp->next;
-        //printf("\n");
-    }
-    printf("Nodes: ");
-    while(temp2!=NULL){
-        printf("%d",temp2->node_num);
-        if(temp2->next!=NULL){
-            printf(", ");
-        }
-        temp2 = temp2->next;
-    }
-    printf("\n");
-}
+//void printGraph(pnode head) {
+//    pnode temp = head;
+//    pnode temp2 = head;
+//    while (temp != NULL) {
+//        int src = temp->node_num;
+//        while (temp->edges != NULL) {
+//            printf("%d -> %d (%d)\n", src, temp->edges->endpoint->node_num, temp->edges->weight);
+//            temp->edges = temp->edges->next;
+//        }
+//        temp = temp->next;
+//        //printf("\n");
+//    }
+//    printf("Nodes: ");
+//    while(temp2!=NULL){
+//        printf("%d",temp2->node_num);
+//        if(temp2->next!=NULL){
+//            printf(", ");
+//        }
+//        temp2 = temp2->next;
+//    }
+//    printf("\n");
+//}
 
 
 
@@ -363,12 +365,18 @@ int main() {
                 break;
             case 'D':
                 getchar();
-                int node_to_remove;//check case for removing head . check case for removing node which is the first edge for some node
+                int node_to_remove;
                 scanf("%d", &node_to_remove);
                 removenode(&head, node_to_remove);
                 c= getchar();
                 break;
-
+            case 'S':
+                getchar();
+                int dest, src;
+                scanf("%d %d", &src, &dest);
+                printf("Dijsktra shortest path: ");
+                dijkstra(&head, src, dest,1);//maybe send without head since in debugger it shows 2 heads
+                break;
 //            case 'T':
 //                printf("T");
 //                FLAG = 0;
@@ -376,7 +384,7 @@ int main() {
 //            case ' ':
 //                break;
             default:
-                printGraph(head);
+               // printGraph(head);
                 FLAG = 0;
                 break;
                 c=-1;
