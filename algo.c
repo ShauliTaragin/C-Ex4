@@ -73,7 +73,13 @@ int* dijkstra(pnode* head , int src , int dest , int bool){
         }
     }
     if(bool){
-        printf("%d" , dist[dest]);
+        if(dist[dest]!=INT_MAX){
+            printf("%d" , dist[dest]);
+        }
+        else{
+            int a = -1;
+            printf("%d" , a);
+        }
     }
     free(Queue);
     return dist;
