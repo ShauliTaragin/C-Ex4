@@ -81,6 +81,67 @@ int* dijkstra(pnode* head , int src , int dest , int bool){
             printf("%d" , a);
         }
     }
-    free(Queue);
+//    free(Queue);
     return dist;
+}
+
+void swap(char *x, char *y) {
+    char c;
+    c = *x;
+    *x = *y;
+    *y = c;
+}
+
+void clean(int **ShortestPath,int size){
+    for (int i = 0; i < size; i++) {
+        free(ShortestPath[i]);
+    }
+    free(ShortestPath);
+}
+
+
+int Combi(char *str, int left, int right, int size, const int *values, int **ShortestPath) {
+    int min = INT_MAX;
+    if (left == right) {
+        int total = 0, max = INT_MAX, length = size - 1;
+        for (int i = 0; i < length; i++) {
+            int distfromdijkstra = ShortestPath[str[i] - '0'][values[str[i + 1] - '0']];
+            if (distfromdijkstra == max) return distfromdijkstra;
+            total = total + distfromdijkstra;
+        }
+        return total;
+    } else {
+        int temp = 0;
+        for (int i = left; i <= right; i++) {
+            swap((str + left), (str + i));
+            temp = Combi(str, left + 1, right, size, values, ShortestPath);
+            if (temp < min) min = temp;
+            swap((str + left), (str + i));
+        }
+        return min;
+    }
+}
+
+void tsp(pnode *head) {
+    int NumberOfNodes = 0;
+    scanf("%d", &NumberOfNodes);
+    int values[NumberOfNodes];
+    for (int i = 0; i < NumberOfNodes; ++i) {
+        scanf("%d", &values[i]);
+    }
+    char str[NumberOfNodes];
+    for (int i = 0; i < NumberOfNodes; i++) {
+        str[i] = (char)(i + '0');
+    }
+    int **ShortestPath = (int **) malloc(sizeof(int *) * NumberOfNodes);
+    for (int i = 0; i < NumberOfNodes; i++) {
+        ShortestPath[i] = dijkstra(head, values[i], values[i], 0);
+    }
+    int temp = Combi(str, 0, NumberOfNodes - 1, NumberOfNodes, values,ShortestPath);
+    if (temp == INT_MAX) {
+        printf(" TSP shortest path: -1\n");
+    }else{
+        printf(" TSP shortest path: %d\n",temp);
+    }
+    //clean(ShortestPath,NumberOfNodes);
 }

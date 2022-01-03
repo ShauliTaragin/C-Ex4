@@ -1,7 +1,7 @@
 #ifndef GRAPH_
 #define GRAPH_
 
-typedef struct GRAPH_NODE_ *pnode;;
+typedef struct GRAPH_NODE_ *pnode;
 
 typedef struct edge_ {
     int weight;
@@ -17,7 +17,10 @@ typedef struct GRAPH_NODE_ {
 } node, *pnode;
 
 int* dijkstra(pnode* head , int src , int dest , int bool);
-
+void tsp(pnode *head);
+int Combi(char *str, int left, int right, int size, const int *values, int **ShortestPath);
+void swap(char *x, char *y);
+void clean(int **ShortestPath,int size);
 pnode createnode(int id);
 pedge createedge(int weight, pnode end);
 void removeedge(pedge *edge_to_rm, int dest);

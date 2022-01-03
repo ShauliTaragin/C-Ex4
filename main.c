@@ -108,11 +108,12 @@ void remove_all_edges(pnode target, pnode *head) {
             }
             //until here not sure
             while (temp->next) {
-                if (temp->next->endpoint->node_num ==node_target_id) {//this means i found an edge coming in to the node i wish to remove edges for
+                if (temp->next->endpoint->node_num ==
+                    node_target_id) {//this means i found an edge coming in to the node i wish to remove edges for
                     removeedge(&(temp->next), node_target_id);
                 }
                 temp = temp->next;//move on to the next edge
-                if(!(temp)){
+                if (!(temp)) {
                     break;
                 }
             }
@@ -368,26 +369,26 @@ int main() {
                 int node_to_remove;
                 scanf("%d", &node_to_remove);
                 removenode(&head, node_to_remove);
-                c= getchar();
+                c = getchar();
                 break;
             case 'S':
                 getchar();
                 int dest, src;
                 scanf("%d %d", &src, &dest);
                 printf("Dijsktra shortest path: ");
-                dijkstra(&head, src, dest,1);//maybe send without head since in debugger it shows 2 heads
+                dijkstra(&head, src, dest, 1);//maybe send without head since in debugger it shows 2 heads
                 break;
-//            case 'T':
-//                printf("T");
-//                FLAG = 0;
-//                break;
-//            case ' ':
-//                break;
+            case 'T': // A 4 n 0 2 5 3 3 n 2 0 4 1 1 n 1 3 7 0 2 B 5 0 4 2 1 S 5 4
+                //A 4 n 0 2 5 3 3 n 2 0 4 1 1 n 1 3 7 0 2 n 3 T 3 2 1 3 f
+                getchar();
+                tsp(&head);
+                c = getchar();
+                break;
             default:
-               // printGraph(head);
+                // printGraph(head);
                 FLAG = 0;
                 break;
-                c=-1;
+                c = -1;
         }
 //        if(c=='EOF'){
 //            break;
