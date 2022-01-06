@@ -344,6 +344,7 @@ int main() {
                 getchar();
                 tsp(&head);
                 first=1;
+                getchar();
                 break;
             default:
                 // printGraph(head);
