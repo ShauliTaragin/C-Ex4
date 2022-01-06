@@ -4,33 +4,12 @@
 #include "Graph.h"
 
 
-//void insert_node_cmd(pnode *head);
-//
-//void delete_node_cmd(pnode *head);
-//
-//void printGraph_cmd(pnode head); //for self debug
-//void deleteGraph_cmd(pnode *head);
-//
-//void shortsPath_cmd(pnode head);
-//
-//void TSP_cmd(pnode head);
+
 
 int vertex = 0;
 
 typedef struct GRAPH_NODE_ *pnode;
-//
-//typedef struct edge_ {
-//    int weight;
-//    pnode endpoint;
-//    struct edge_ *next;
-//} edge, *pedge;
-//
-//
-//typedef struct GRAPH_NODE_ {
-//    int node_num;
-//    pedge edges;
-//    struct GRAPH_NODE_ *next;
-//} node, *pnode;
+
 
 pnode createnode(int id) {
     pnode a = (pnode) malloc(sizeof(node));
@@ -241,30 +220,6 @@ void insert_node_cmd(pnode *head, int id_of_node_to_add) {
     //add ending point here
 }
 
-//void printGraph(pnode head) {
-//    pnode temp = head;
-//    pnode temp2 = head;
-//    while (temp != NULL) {
-//        int src = temp->node_num;
-//        while (temp->edges != NULL) {
-//            printf("%d -> %d (%d)\n", src, temp->edges->endpoint->node_num, temp->edges->weight);
-//            temp->edges = temp->edges->next;
-//        }
-//        temp = temp->next;
-//        //printf("\n");
-//    }
-//    printf("Nodes: ");
-//    while(temp2!=NULL){
-//        printf("%d",temp2->node_num);
-//        if(temp2->next!=NULL){
-//            printf(", ");
-//        }
-//        temp2 = temp2->next;
-//    }
-//    printf("\n");
-//}
-
-
 
 int main() {
     int FLAG = 1;
@@ -388,7 +343,6 @@ int main() {
                 //A 4 n 0 2 5 3 3 n 2 0 4 1 1 n 1 3 7 0 2 n 3 T 3 2 1 3 f
                 getchar();
                 tsp(&head);
-                c = getchar();
                 first=1;
                 break;
             default:
@@ -403,5 +357,3 @@ int main() {
         removie = head;
     }
 }
-
-

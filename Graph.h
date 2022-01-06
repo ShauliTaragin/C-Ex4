@@ -1,3 +1,4 @@
+
 #ifndef GRAPH_
 #define GRAPH_
 
@@ -16,10 +17,14 @@ typedef struct GRAPH_NODE_ {
     struct GRAPH_NODE_ *next;
 } node, *pnode;
 
-int* dijkstra(pnode* head , int src , int dest , int bool);
+int min(const int arr[],int n);
+int factorial(int size);
+int arrayc(pnode * head,int values[], int size);
+int dijkstra(pnode* head , int src , int dest , int bool);
 void tsp(pnode *head);
-int Combi(char *str, int left, int right, int size, const int *values, int **ShortestPath);
-void swap(char *x, char *y);
+void per(pnode *head, int *values, int right, int left, int *permutat, int *n);
+//int Combi(char *str, int left, int right, int size, const int *values, int **ShortestPath);
+void swap(int *x, int *y);
 void clean(int **ShortestPath,int size);
 pnode createnode(int id);
 pedge createedge(int weight, pnode end);
