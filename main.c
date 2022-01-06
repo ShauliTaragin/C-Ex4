@@ -269,8 +269,12 @@ void insert_node_cmd(pnode *head, int id_of_node_to_add) {
 int main() {
     int FLAG = 1;
     node *head = NULL;
-    int c = getchar();
+    int c =0;
+    int first =1;
     while (FLAG) {
+        if(first) {
+            c = getchar();
+        }
         switch (c) {
             case 'A':
                 head = NULL;//make sure code dosen't get stuck here
@@ -353,23 +357,24 @@ int main() {
                     }
                     c = getchar();
                     if (c != 'n') {
+                        first=0;
                         break;
                     }
                 }
                 break;
             case 'B':
-                getchar();
+                getchar();//for the space
                 int to_add;
                 scanf("%d", &to_add);
                 insert_node_cmd(&head, to_add);
-                c = getchar();
+                first=1;
                 break;
             case 'D':
                 getchar();
                 int node_to_remove;
                 scanf("%d", &node_to_remove);
                 removenode(&head, node_to_remove);
-                c = getchar();
+                first=1;
                 break;
             case 'S':
                 getchar();
@@ -377,22 +382,25 @@ int main() {
                 scanf("%d %d", &src, &dest);
                 printf("Dijsktra shortest path: ");
                 dijkstra(&head, src, dest, 1);//maybe send without head since in debugger it shows 2 heads
+                first=1;
                 break;
             case 'T': // A 4 n 0 2 5 3 3 n 2 0 4 1 1 n 1 3 7 0 2 B 5 0 4 2 1 S 5 4
                 //A 4 n 0 2 5 3 3 n 2 0 4 1 1 n 1 3 7 0 2 n 3 T 3 2 1 3 f
                 getchar();
                 tsp(&head);
                 c = getchar();
+                first=1;
                 break;
             default:
                 // printGraph(head);
                 FLAG = 0;
                 break;
-                c = -1;
         }
-//        if(c=='EOF'){
-//            break;
-//        }
+    }
+    pnode removie = head;
+    while(removie!=NULL){
+        removenode(&head , removie->node_num);
+        removie = head;
     }
 }
 
