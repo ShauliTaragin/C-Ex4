@@ -146,6 +146,6 @@ void tsp(pnode *head){
     if(permutations[n] == INT_MAX){
         printf("TSP Shortest path: %d \n",-1);
     }else{
-        printf("TSP shortest path: %d \n",permutations[n]);
+        printf("TSP Shortest path: %d \n",permutations[n]);
     }
 }
