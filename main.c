@@ -232,8 +232,12 @@ int main() {
         }
         switch (c) {
             case 'A':
-                head = NULL;//make sure code dosen't get stuck here
                 getchar();
+                pnode removi = head;
+                while(removi!=NULL){
+                    removenode(&head , removi->node_num);
+                    removi = head;
+                }
                 scanf("%d", &vertex); // vertex graph.
                 char n;
                 scanf("%s", &n);

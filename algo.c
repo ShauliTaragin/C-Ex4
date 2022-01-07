@@ -37,7 +37,7 @@ int dijkstra(pnode* head , int src , int dest , int bool){
         //the next 8 rows of code is my way to check if queue is empty
         int min = INT_MAX;
         int curr_node_id = -1;
-        for (int i = 0; i <sizeof(Queue); ++i) {
+        for (int i = 0; i <max+1; ++i) {
             if(Queue[i]==1){//only if queue[i] is 1 then that i node exits and we can
                 if(dist[i]<min){
                     min = dist[i];
