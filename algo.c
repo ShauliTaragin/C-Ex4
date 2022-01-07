@@ -144,8 +144,8 @@ void tsp(pnode *head){
     per(head,values,0,NumberOfNodes-1,permutations,&temp);
     int n = min(permutations,f);
     if(permutations[n] == INT_MAX){
-        printf("TSP Shortest path: %d \n",-1);
+        printf("TSP shortest path: %d \n",-1);
     }else{
-        printf("TSP Shortest path: %d \n",permutations[n]);
+        printf("TSP shortest path: %d \n",permutations[n]);
     }
 }
