@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-#include "graph.h"
+#include "Graph.h"
 
 //first i wish to create an array to represent our graph so find max node num to create it
 
